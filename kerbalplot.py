@@ -2,8 +2,6 @@
 """
 Created on Thu Aug 08 19:38:55 2013
 
-Licensed under GNU GPLv3
-
 @author: Johannes Falke
 """
 
