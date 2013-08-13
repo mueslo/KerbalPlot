@@ -1,9 +1,11 @@
 import plotplugin as pl
 import numpy as np
 import matplotlib as mpl
+mpl.use('Qt4Agg')
+import matplotlib.pyplot as plt
 import parts as parts
-mpl.pyplot.rc('text', usetex=True)
-mpl.pyplot.rc('font', family='sans-serif')
+plt.rc('text', usetex=True)
+plt.rc('font', family='sans-serif')
 
 print "Importing plugins..."
 n_engines = np.size(parts.engines,axis=0)

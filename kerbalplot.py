@@ -6,10 +6,12 @@ import numpy as np
 import parts as parts
 import plugins as plugins
 import matplotlib as mpl
+mpl.use('Qt4Agg')
+import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider, RadioButtons, Button
 #from multiprocessing import Pool, freeze_support
-mpl.pyplot.rc('text', usetex=True)
-mpl.pyplot.rc('font', family='sans-serif')
+plt.rc('text', usetex=True)
+plt.rc('font', family='sans-serif')
 
 g0 = 9.81
 
@@ -154,7 +156,7 @@ class KerbalPlot:
     def update(self, ax):
         
         self.plot(ax,self.currentPlot, self.twr, self.isVacuum, self.engineCount)
-        mpl.pyplot.draw()
+        plt.draw()
 
     def atmfunc(self, label):
         print "atmfunc!"
@@ -205,7 +207,7 @@ class KerbalPlot:
         
 
         # Create figure and plotting axes
-        self.fig = mpl.pyplot.figure(figsize=(15,10))
+        self.fig = plt.figure(figsize=(15,10))
         self.ax = self.fig.add_subplot(111)
         self.fig.subplots_adjust(bottom=0.15)
         #print self.ax.size                  
@@ -215,7 +217,7 @@ class KerbalPlot:
         #self.axcb_overlay = self.fig.add_axes([0.99, 0.15, 0.01, 0.75]) 
             
         # Create colourmaps
-        cmap = mpl.pyplot.cm.Accent
+        cmap = plt.cm.Accent
         cmaplist = [cmap(i) for i in range(cmap.N)]
         cmaplist[85] = (0.2,0.7,0.9,1.0)
         #cmaplist[42] = (0.2,0.7,0.9,1.0)
@@ -228,14 +230,14 @@ class KerbalPlot:
         
         # Add sliders and radiobuttons
         axcolor = 'lightgoldenrodyellow'
-        self.axtwr  = mpl.pyplot.axes([0.25, 0.04, 0.65, 0.03], axisbg=axcolor)
+        self.axtwr  = plt.axes([0.25, 0.04, 0.65, 0.03], axisbg=axcolor)
         self.stwr = Slider(self.axtwr, 'Minimum TWR', 0.0, 5.0, valinit=1.)
         #self.stwr.on_changed(lambda val: self.update(self.ax))
         self.stwr.on_changed(self.twrchange)
-        self.atmax = mpl.pyplot.axes([0.08, 0.02, 0.06, 0.1], axisbg=axcolor)
+        self.atmax = plt.axes([0.08, 0.02, 0.06, 0.1], axisbg=axcolor)
         self.radioatm = RadioButtons(self.atmax, ('vac', 'atm'), active=0)
         self.radioatm.on_clicked(self.atmfunc)
-        self.engax = mpl.pyplot.axes([0.02, 0.02, 0.06, 0.1], axisbg=axcolor, title='\# Engines')
+        self.engax = plt.axes([0.02, 0.02, 0.06, 0.1], axisbg=axcolor, title='\# Engines')
         self.radioeng = RadioButtons(self.engax, sorted(engineLimitChoices, key=lambda key: -engineLimitChoices[key]), active=0)    
         self.radioeng.on_clicked(self.engfunc)
         
@@ -265,7 +267,7 @@ class KerbalPlot:
         btn_xe= 0.9
         btn_x = np.linspace(btn_xi,btn_xe,len(self.types)+1)        
         for i in np.arange(len(self.types)):
-            ax_tmp=mpl.pyplot.axes([btn_x[i],0.9,(btn_xe-btn_xi)/(len(self.types)),0.04])
+            ax_tmp=plt.axes([btn_x[i],0.9,(btn_xe-btn_xi)/(len(self.types)),0.04])
             self.buttons.append(Button(ax_tmp, self.types[i], hovercolor='0.975'))
             self.buttons[i].on_clicked(lambda event,i=i: self.plot(self.ax,self.types[i],self.twr,self.isVacuum, self.engineCount))
         
@@ -281,4 +283,4 @@ class KerbalPlot:
         
         
         # Show plot
-        mpl.pyplot.show()
+        plt.show()
