@@ -21,7 +21,7 @@ pldict = {}
 
 #sample function
 #def pfunc():
-    #import any of the following (Z,M,N,X,Y) via e.g.
+    #import any of the following (Z,M,N,X,Y) (all numpy arrays) via e.g.
     # X=kwargs["X"]
     # and add it to the dependencies
 
@@ -74,7 +74,7 @@ class EngineCountOverlay(pl.PlotPlugin):
             if Z[i]==n_engines:
                 n_opt[i] = -np.inf
             else:
-                n_opt[i] = N[tuple(np.concatenate([[Z[i]],i]))]
+                n_opt[i] = N[Z[i]][i]
         return np.dstack([zero,zero,zero,np.log2(n_opt)/10.])
         
 class EngineCount(pl.PlotPlugin):
@@ -93,11 +93,12 @@ class EngineCount(pl.PlotPlugin):
         Z=kwargs["Z"]
         N=kwargs["N"]
         n_opt = np.zeros(Z.shape)
+        #sloooooow
         for i in np.ndindex(Z.shape):
             if Z[i]==n_engines:
                 n_opt[i] = -np.inf
             else:
-                n_opt[i] = N[tuple(np.concatenate([[Z[i]],i]))]
+                n_opt[i] = N[Z[i]][i]
         return n_opt
         
 class TotalMass(pl.PlotPlugin):

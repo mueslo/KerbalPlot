@@ -38,66 +38,66 @@ def n_e(engine, twr, m_p, deltv, engineCount):
 
 class KerbalPlot:
 #TODO resolution & dimension change
-# plot(ax, type, twr, vac, dims, res, otherargs)
-    #             obj str  float bool int  func
+
+
     def plot(self, ax, typ, twr, vac, cnt):
-        print "generalised plot! (twr vac cnt)=(",twr,vac,cnt,")"
         
         if self.lastCalc != (twr, vac, cnt):
             self.compute(ax, twr, vac, cnt)
         else: print "No recalculation necessary."
-
-        #self.axcb_overlay.cla()
-        #del self.axcb_overlay #does not actually remove the drawn axes
-        print "Plotting",typ
-        if plugins.pldict[typ].isOverlay:
-            print "Plot type is overlay, not clearing plot."
-            #self.axcb_overlay = self.fig.add_axes([0.99, 0.15, 0.01, 0.75]) 
+        
+        #check if type is valid
+        if typ == None: typ = "Opt Eng" #Try Opt. Engine plot as fallback
+        if len(plugins.pldict)==0:
+            print "Error: No plugins for plotting found in plugins.py!"
         else:
-            self.ax.cla() #clear plot axes
-            self.axcb.cla() #clear colourbar axes
-        
-        
-        #FIXME Z,M,N
-        #TODO multiprocessing
-        
-        #main plot config & labels
-        ax.set_yscale('log')
-        ax.grid(True, which="both")   
-        ax.yaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
-        ax.set_ylabel(r'Payload mass $m_\mathrm{payload}$ in $\mathrm{t}$')
-        ax.set_xlabel(r'Stage $\Delta v$ in $\mathrm{\frac{m}{s}}$')   
-        
-        #name,pl,func
-        
-        #plugin_dict[name]==[pl,func]
-        #title,cmap,norm,fmt,extend,ticks,labels = ['Optimal engine\n(least total mass $m_\mathrm{total} = m_\mathrm{payload} + m_\mathrm{engine} + m_\mathrm{fuel}$)',
-        #          self.cmap,self.norm,None,'neither',np.arange(n_engines)+0.5,enginedict]
-        
-        plot = plugins.pldict[typ].plotVals
-        func = plugins.pldict[typ].pfunc
-        z=func(Z=self.Z,M=self.M_cache,N=self.n_cache,X=self.X,Y=self.Y)
-        
-        ax.set_title(plot[0])
-        self.CB = mpl.colorbar.ColorbarBase(self.axcb, cmap=plot[1], norm=plot[2], format=plot[3], extend=plot[4], ticks=plot[5])
-        if plot[6]!=None:
-            self.CB.ax.set_yticklabels(plot[6])   
-        
-        print "Image shape in px:",np.shape(z)
-        ax.imshow(z,cmap=plot[1], norm=plot[2], extent=(0,10000,0.01,1000), origin='lower')
-
-        #(fake) tabs changed
-        if typ != self.currentPlot:
-            #update (fake) tab color
-            for b in self.buttons:
-                if b.label.get_text()==typ:
-                    print b.label.get_text(),"active"
-                    b.color = self.activeTabColor
-                else:
-                    print b.label.get_text(),"inactive"
-                    b.color = self.inactiveTabColor
-            #update plot type var
-            self.currentPlot = typ 
+                    
+            if typ not in plugins.pldict:
+                typ = plugins.pldict.keys()[0]
+    
+            #self.axcb_overlay.cla()
+            #del self.axcb_overlay #does not actually remove the drawn axes
+            print "Plotting",typ,"(twr vac cnt)=(",twr,vac,cnt,")"
+            
+            #plugin_dict[name]==[pl,func]
+            #title,cmap,norm,fmt,extend,ticks,labels        
+            
+            plot = plugins.pldict[typ].plotVals
+            func = plugins.pldict[typ].pfunc
+            z=func(Z=self.Z,M=self.M_cache,N=self.n_cache,X=self.X,Y=self.Y)
+            
+            
+            if plugins.pldict[typ].isOverlay:
+                print "Plot type is overlay, not clearing plot."
+                #self.axcb_overlay = self.fig.add_axes([0.99, 0.15, 0.01, 0.75]) 
+            else:
+                self.ax.cla() #clear plot axes
+                self.axcb.cla() #clear colourbar axes
+                ax.set_title(plot[0])
+                self.CB = mpl.colorbar.ColorbarBase(self.axcb, cmap=plot[1], norm=plot[2], format=plot[3], extend=plot[4], ticks=plot[5])
+                if plot[6]!=None:
+                    self.CB.ax.set_yticklabels(plot[6])   
+            
+            #main plot config & labels
+            ax.set_yscale('log')
+            ax.grid(True, which="both")   
+            ax.yaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
+            ax.set_ylabel(r'Payload mass $m_\mathrm{payload}$ in $\mathrm{t}$')
+            ax.set_xlabel(r'Stage $\Delta v$ in $\mathrm{\frac{m}{s}}$')   
+            
+            ax.imshow(z,cmap=plot[1], norm=plot[2], extent=(0,10000,0.01,1000), origin='lower')
+    
+    
+            #(fake) tabs changed
+            if typ != self.currentPlot:
+                #update (fake) tab color
+                for b in self.buttons:
+                    if b.label.get_text()==typ:
+                        b.color = self.activeTabColor
+                    else:
+                        b.color = self.inactiveTabColor
+                #update plot type var
+                self.currentPlot = typ 
        
 
     def compute(self, ax, twr, vac, cnt):
@@ -105,6 +105,9 @@ class KerbalPlot:
         print "Computing..."
         #params = self.X,self.Y,twr,cnt
         #n_c2 = pool.map(n_wrap, params)
+        #TODO iterate explicitly so that n is not calculated twice
+        #TODO multiprocessing
+        
         self.n_cache = np.array([n_e(e,twr,self.Y,self.X,cnt) for e in self.engines])
         
         self.M_cache = np.array([(n_e(e,twr,self.Y,self.X,cnt)*e[1]+self.Y)*np.exp(self.X/(g0*e[4])) for e in self.engines])
@@ -118,7 +121,7 @@ class KerbalPlot:
         self.lastCalc = (twr, vac, cnt)  
         
 
-    #TODO: use height slider instead of vac/atm
+    #TODO: use height/atm slider instead of boolean vac/atm
     # Fraction of full Kerbin atm, unused
     #H_kerbin = 5000
     #atm = lambda h: np.exp(-h/H_kerbin)
@@ -127,7 +130,7 @@ class KerbalPlot:
 
     #outputs status bar info
     def format_coord(self, x, y):
-        col = int(x*self.res[0]/self.xmax) #TODO tweak these later
+        col = int(x*self.res[0]/self.xmax)
         row = int(self.res[1]/(np.log10(self.ymax)-np.log10(self.ymin))*(np.log10(y)-np.log10(self.ymin))-0.5)
         
         #check if actually in drawing area
@@ -183,28 +186,22 @@ class KerbalPlot:
         self.update(self.ax)
         #draw()
         
+        
     def twrchange(self, twr):
         self.twr = twr
         self.update(self.ax)
         
-    #def plotchange(self)
-    '''#pickEvent
-    line, = ax.plot(rand(100), 'o', picker=5)  # 5 points tolerance
-
-    def on_pick(event):
-        thisline = event.artist
-        xdata, ydata = thisline.get_data()
-        ind = event.ind
-        print('on pick line:', zip(xdata[ind], ydata[ind]))
-    
-    cid = fig.canvas.mpl_connect('pick_event', on_pick)
-    '''
     
     def __init__(self,xmin=0.,xmax = 10000.,ymin = 0.01,ymax = 1000.,res = (500,500)):
         self.xmin=xmin; self.xmax=xmax
         self.ymin=ymin; self.ymax=ymax
         self.res = res
-        print 'KerbalPlot!'
+        
+        # Add iterating arrays
+        x = np.arange(self.xmin, self.xmax, self.xmax/self.res[0])
+        y = np.logspace(np.log10(self.ymin), np.log10(self.ymax), num=self.res[1])
+        self.X, self.Y = np.meshgrid(x, y)
+        self.xx,self.yy = np.meshgrid(np.arange(self.res[0]),np.arange(self.res[1]), sparse=True)
         
 
         # Create figure and plotting axes
@@ -244,28 +241,20 @@ class KerbalPlot:
         
         # No calculation before
         self.lastCalc = (-1, -1, -1)
-
+        self.currentPlot = None
         
         # Initialise values
-        self.twr = self.stwr.val
         self.isVacuum = True
         self.engineCount = np.inf
         self.engines = parts.engines
+        self.twr = self.stwr.val
 
         self.allowSRBs = False   #TODO implement SRBs (fixed fuel engines)
         self.fuelTanks = False   #TODO fuel tank discreteness and weight        
         self.mixedEngines= False #TODO mixed engine types
-        self.currentPlot = None  #TODO proper (fake) tab support
-        #TODO: class for plot functions in plugins.py
         #TODO: plugin entry points
      
 
-        
-        # Add iterating arrays
-        x = np.arange(self.xmin, self.xmax, self.xmax/self.res[0])
-        y = np.logspace(np.log10(self.ymin), np.log10(self.ymax), num=self.res[1])
-        self.X, self.Y = np.meshgrid(x, y)
-        self.xx,self.yy = np.meshgrid(np.arange(self.res[0]),np.arange(self.res[1]), sparse=True)
         
         #Create buttons for plotting plugins
         self.activeTabColor = axcolor
@@ -281,17 +270,9 @@ class KerbalPlot:
             self.buttons.append(Button(ax_tmp, self.types[i], hovercolor='0.975'))
             self.buttons[i].on_clicked(lambda event,i=i: self.plot(self.ax,self.types[i],self.twr,self.isVacuum, self.engineCount))
         
-
-        # Initial Plot
-        typ_i = "Opt Eng" #try this as initial plot type
-        if typ_i in plugins.pldict:
-            self.plot(self.ax,typ_i,self.twr,self.isVacuum,self.engineCount)
-        elif len(plugins.pldict)==0:
-            print "No plugins for plotting found in plugins.py!"
-        else:
-            self.plot(self.ax, plugins.pldict.keys()[0],\
-                      self.twr, self.isVacuum, self.engineCount)
         
+        # Initial plot
+        self.update(self.ax)
         
         # Assign custom status bar formatter
         self.ax.format_coord = self.format_coord
@@ -302,8 +283,3 @@ class KerbalPlot:
         
         # Show plot
         mpl.pyplot.show()
-
-
-if __name__=='__main__':
-    #freeze_support()    
-    k = KerbalPlot(res=(400,200))
