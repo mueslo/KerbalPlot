@@ -3,6 +3,10 @@ KerbalPlot
 
 Plots optimal engine for each delta-V/Payload mass configuration, among a few other things.
 
+Current Limitations:
+- Assumes that fuel tanks have zero dry weight and are infinitely divisible (so look for a correspondingly larger payload mass)
+- Cannot mix engine types.
+
 
 Uses:
  - Python 2.7.x
