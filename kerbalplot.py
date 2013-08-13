@@ -259,7 +259,6 @@ class KerbalPlot:
         #Create buttons for plotting plugins
         self.activeTabColor = axcolor
         self.inactiveTabColor = '#DADAC2'
-        #self.types = plugins.pdict.keys()[::-1] #reverse order
         self.types = plugins.pldict.keys()[::-1] #reverse order
         self.buttons = []
         btn_xi= 0.7

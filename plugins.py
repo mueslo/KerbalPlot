@@ -9,9 +9,8 @@ print "Importing plugins..."
 n_engines = np.size(parts.engines,axis=0)
 
 # dictionary of all plugins (this will be used by kerbalplot)
-pdict = {}
-
 pldict = {}
+
 #to make plugin loadable by kerbalplot:
 #plugin_dict['short name'] = [plot_options,plot_function]
 # where plot_options = [plt_title,plt_cmap,plt_norm,plt_cbar_format,
@@ -19,7 +18,7 @@ pldict = {}
 # see examples below
 
 
-#sample function
+#sample plotting function
 #def pfunc():
     #import any of the following (Z,M,N,X,Y) (all numpy arrays) via e.g.
     # X=kwargs["X"]
