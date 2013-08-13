@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Aug 11 15:52:09 2013
-
-@author: jf
-"""
-
 import plotplugin as pl
 import numpy as np
 import matplotlib as mpl
@@ -29,7 +22,7 @@ pldict = {}
 #sample function
 #def pfunc():
     #import any of the following (Z,M,N,X,Y) via e.g.
-    # X=kwargs[X]
+    # X=kwargs["X"]
     # and add it to the dependencies
 
     #"Z" contains the optimal engine type for each resolved pixel
@@ -67,11 +60,11 @@ class FuelMassPercentage(pl.PlotPlugin):
 class EngineCountOverlay(pl.PlotPlugin):
     dependency = ["Z","N"]
     isOverlay = True
-    plotVals = [r'Optimal number of engines\n\
-                  $n_\mathrm{engines}^{\mathrm{opt}}$',
-                  None,None,
-                  "%1.0f",'max',np.concatenate\
-                  ([2**(np.arange(0.,10.,1)),[1000]]),None]
+    plotVals = ['Optimal number of engines\n'+
+                r'$ n_\mathrm{engines}^{\mathrm{opt}} $',
+                None,None,
+                "%1.0f",'max',np.concatenate\
+                ([2**(np.arange(0.,10.,1)),[1000]]),None]
     def pfunc(self,**kwargs):
         Z=kwargs["Z"]
         N=kwargs["N"]
@@ -86,11 +79,11 @@ class EngineCountOverlay(pl.PlotPlugin):
         
 class EngineCount(pl.PlotPlugin):
     dependency = ["Z","N"]
-    plotVals = [r'Optimal number of engines\n\
-                  $n_\mathrm{engines}^{\mathrm{opt}}$',
-                  None,mpl.colors.LogNorm(1,1000),
-                  "%1.0f",'max',np.concatenate\
-                  ([2**(np.arange(0.,10.,1)),[1000]]),None]
+    plotVals = ['Optimal number of engines\n'+
+                r'$ n_\mathrm{engines}^{\mathrm{opt}} $',
+                None,mpl.colors.LogNorm(1,1000),
+                "%1.0f",'max',np.concatenate\
+                ([2**(np.arange(0.,10.,1)),[1000]]),None]
     def conf(self):
         cmap_cnt = mpl.cm.get_cmap('jet')
         cmap_cnt.set_over('black')
@@ -109,7 +102,8 @@ class EngineCount(pl.PlotPlugin):
         
 class TotalMass(pl.PlotPlugin):
     dependency = ["M"]
-    plotVals = [r'Total mass of craft\n\$\m_\mathrm{total}$',
+    plotVals = ['Total mass of craft\n'+
+                r'$ m_\mathrm{total} $',
                   None,mpl.colors.LogNorm(0.01,1000),
                   "%1.2ft", 'both', np.concatenate\
                   ([2**(np.arange(-6.,10.,2)),[1000]]),None]

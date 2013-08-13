@@ -1,16 +1,10 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Aug 11 22:19:51 2013
-
-@author: jf
-"""
-
-
-
+#will not work without a proper function and dependencies!
 class PlotPlugin(object):
-    plotVals=None
+    #         title,cmap,norm,fmt,extend,ticks,labels
+    plotVals=[None,None,None,None,'both',None,None]
     dependency=None
-    def __init__(self,plotVals=None,pfunc=None,dependency=None,isOverlay=False):
+    isOverlay=False
+    def __init__(self,plotVals=None,pfunc=None,dependency=None,isOverlay=None):
         if plotVals!=None: self.plotVals = plotVals
         if pfunc!=None: self.pfunc = pfunc  
         if isOverlay!=None: self.isOverlay=isOverlay    
@@ -22,10 +16,7 @@ class PlotPlugin(object):
         for d in self.dependency:
             t = t and kwargs.has_key(d)
         if t:
-            relevant_kwargs = {}          
-            for d in self.dependency:
-                relevant_kwargs[d]=kwargs[d]
-            return self.pfunc(**relevant_kwargs)
+            return self.pfunc(**kwargs)
         else:
             print "Dependencies of plugin not satisfied!"
             

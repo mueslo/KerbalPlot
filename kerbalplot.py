@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Aug 08 19:38:55 2013
-
-@author: Johannes Falke
-"""
-
 #!/usr/bin/env python
 #import itertools as it
 from copy import deepcopy
@@ -30,7 +23,7 @@ r'$<10$': 10. }
 #calculates number of engines needed to attain a certain TWR,
 # with infinitely divisible, 0-dry-mass fuel tanks
 def n_e(engine, twr, m_p, deltv, engineCount):
-    if (twr==0): return 1
+    if (twr==0): return np.ones(np.shape(m_p)) #shape(m_p) should == shape(deltv)
     else:
         #calculate engine count, e[2]=Thrust; e[4]=I_sp; e[1]=Weight, 1/1000
         h = np.ceil(m_p/(engine[2]/(twr*g0*np.exp(deltv/(engine[4]*g0)))-engine[1]))
@@ -42,15 +35,8 @@ def n_e(engine, twr, m_p, deltv, engineCount):
         h[b] = np.inf #set forbidden
         return h
 
-#def n_wrap(par):
-#    return np.array([n_e(e,*par) for e in parts.engines])
-
 
 class KerbalPlot:
-    def m_ef(self, m_f):
-        print 'lol'
-    
-
 #TODO resolution & dimension change
 # plot(ax, type, twr, vac, dims, res, otherargs)
     #             obj str  float bool int  func
@@ -60,12 +46,14 @@ class KerbalPlot:
         if self.lastCalc != (twr, vac, cnt):
             self.compute(ax, twr, vac, cnt)
         else: print "No recalculation necessary."
-            
-        print 'plot',typ
-        
+
         #self.axcb_overlay.cla()
-        if not plugins.pldict[typ].isOverlay:
-            print "Plot plugin is overlay, not clearing axes"
+        #del self.axcb_overlay #does not actually remove the drawn axes
+        print "Plotting",typ
+        if plugins.pldict[typ].isOverlay:
+            print "Plot type is overlay, not clearing plot."
+            #self.axcb_overlay = self.fig.add_axes([0.99, 0.15, 0.01, 0.75]) 
+        else:
             self.ax.cla() #clear plot axes
             self.axcb.cla() #clear colourbar axes
         
@@ -95,7 +83,7 @@ class KerbalPlot:
         if plot[6]!=None:
             self.CB.ax.set_yticklabels(plot[6])   
         
-        print np.shape(z)
+        print "Image shape in px:",np.shape(z)
         ax.imshow(z,cmap=plot[1], norm=plot[2], extent=(0,10000,0.01,1000), origin='lower')
 
         #(fake) tabs changed
@@ -220,15 +208,15 @@ class KerbalPlot:
         
 
         # Create figure and plotting axes
-        fig = mpl.pyplot.figure(figsize=(15,10))
-        self.ax = fig.add_subplot(111)
-        fig.subplots_adjust(bottom=0.15)
+        self.fig = mpl.pyplot.figure(figsize=(15,10))
+        self.ax = self.fig.add_subplot(111)
+        self.fig.subplots_adjust(bottom=0.15)
         #print self.ax.size                  
         
         # Create colourbar axes
-        self.axcb = fig.add_axes([0.90, 0.15, 0.01, 0.75])  
-        self.axcb_overlay = fig.add_axes([0.99, 0.15, 0.01, 0.75]) 
-        
+        self.axcb = self.fig.add_axes([0.90, 0.15, 0.01, 0.75])  
+        #self.axcb_overlay = self.fig.add_axes([0.99, 0.15, 0.01, 0.75]) 
+            
         # Create colourmaps
         cmap = mpl.pyplot.cm.Accent
         cmaplist = [cmap(i) for i in range(cmap.N)]
@@ -318,4 +306,4 @@ class KerbalPlot:
 
 if __name__=='__main__':
     #freeze_support()    
-    k = KerbalPlot(res=(1000,500))
+    k = KerbalPlot(res=(400,200))

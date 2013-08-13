@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Aug 11 16:29:51 2013
-
-@author: jf
-"""
-
 # Not yet implemented
 fueltanklist = [['Oscar-B',0.078675,0.015], #19.1% dry weight
                 ['Round-8',0.136,0.025], #18.4% dry weight
