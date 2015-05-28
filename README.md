@@ -1,9 +1,18 @@
-KerbalPlot
+Kerbalplot (new)
 ==========
+
+test post please ignore
+
+![Example plot](https://raw.github.com/mueslo/KerbalPlot/master/engine_pressure.png)
+![Example plot](https://raw.github.com/mueslo/KerbalPlot/master/engine_pressure2.png)
+
+KerbalPlot (old)
+===
 
 Plots optimal engine for each delta-V/Payload mass configuration, among a few other things.
 
 Windows **Download**: [here](https://github.com/mueslo/KerbalPlot/releases/tag/0.01)
+Linux: you know what to do, install the relevant python packages and just start the script
 
 Current Limitations:
  - Cannot mix engine types.
