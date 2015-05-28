@@ -3,8 +3,8 @@ Kerbalplot (new)
 
 test post please ignore
 
-![Example plot](https://raw.github.com/mueslo/KerbalPlot/master/engine_pressure.png)
-![Example plot](https://raw.github.com/mueslo/KerbalPlot/master/engine_pressure2.png)
+![Example plot](https://raw.github.com/mueslo/KerbalPlot/master/engines_pressure.png)
+![Example plot](https://raw.github.com/mueslo/KerbalPlot/master/engines_pressure2.png)
 
 KerbalPlot (old)
 ===
