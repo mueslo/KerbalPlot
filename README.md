@@ -5,6 +5,7 @@ test post please ignore
 
 ![Example plot](https://raw.github.com/mueslo/KerbalPlot/master/engines_pressure.png)
 ![Example plot](https://raw.github.com/mueslo/KerbalPlot/master/engines_pressure2.png)
+![Example plot](https://raw.github.com/mueslo/KerbalPlot/master/isp_twr.png)
 
 KerbalPlot (old)
 ===
