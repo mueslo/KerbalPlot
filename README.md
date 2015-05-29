@@ -1,4 +1,4 @@
-Kerbalplot (new)
+KerbalPlot (new)
 ==========
 
 test post please ignore
@@ -6,6 +6,24 @@ test post please ignore
 ![Example plot](https://raw.github.com/mueslo/KerbalPlot/master/engines_pressure.png)
 ![Example plot](https://raw.github.com/mueslo/KerbalPlot/master/engines_pressure2.png)
 ![Example plot](https://raw.github.com/mueslo/KerbalPlot/master/isp_twr.png)
+
+![Example plot](http://raw.github.com/mueslo/KerbalPlot/master/optimalengine_Dres_p=0.0_nmax=inf_mintwr=0.15.png)
+![Example plot](http://raw.github.com/mueslo/KerbalPlot/master/optimalengine_Duna_p=0.2_nmax=inf_mintwr=0.4.png)
+![Example plot](http://raw.github.com/mueslo/KerbalPlot/master/optimalengine_Eve_p=5.0_nmax=inf_mintwr=2.0.png)
+![Example plot](http://raw.github.com/mueslo/KerbalPlot/master/optimalengine_Kerbin_p=1.0_nmax=inf_mintwr=1.25.png)
+![Example plot](http://raw.github.com/mueslo/KerbalPlot/master/optimalengine_Laythe_p=0.6_nmax=inf_mintwr=1.0.png)
+![Example plot](http://raw.github.com/mueslo/KerbalPlot/master/optimalengine_Minmus,)
+![Example plot](http://raw.github.com/mueslo/KerbalPlot/master/Bop_p=0.0_nmax=inf_mintwr=0.07.png)
+![Example plot](http://raw.github.com/mueslo/KerbalPlot/master/optimalengine_Moho,)
+![Example plot](http://raw.github.com/mueslo/KerbalPlot/master/Vall_p=0.0_nmax=inf_mintwr=0.35.png)
+![Example plot](http://raw.github.com/mueslo/KerbalPlot/master/optimalengine_Mun,)
+![Example plot](http://raw.github.com/mueslo/KerbalPlot/master/Eeloo,)
+![Example plot](http://raw.github.com/mueslo/KerbalPlot/master/Ike_p=0.0_nmax=inf_mintwr=0.22.png)
+![Example plot](http://raw.github.com/mueslo/KerbalPlot/master/optimalengine_Space_p=0.0_nmax=inf_mintwr=0.05.png)
+![Example plot](http://raw.github.com/mueslo/KerbalPlot/master/optimalengine_Space_p=0.0_nmax=inf_mintwr=0.0.png)
+![Example plot](http://raw.github.com/mueslo/KerbalPlot/master/optimalengine_Space_p=0.0_nmax=inf_mintwr=0.1.png)
+![Example plot](http://raw.github.com/mueslo/KerbalPlot/master/optimalengine_Tylo_p=0.0_nmax=inf_mintwr=1.0.png)
+
 
 KerbalPlot (old)
 ===
