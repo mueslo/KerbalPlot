@@ -44,3 +44,18 @@ class OrderedDefaultDict(OrderedDict):
         return json.dumps(self, indent=2)
         #return 'OrderedDefaultDict(%s, %s)' % (self.default_factory,
         #                                       OrderedDict.__repr__(self))
+        
+        
+import time                                                
+
+def timeit(method):
+    # source: https://www.andreas-jung.com/contents/a-python-decorator-for-measuring-the-execution-time-of-methods
+    def timed(*args, **kw):
+        ts = time.time()
+        result = method(*args, **kw)
+        te = time.time()
+
+        print '{0} {1} s'.format(method.__name__, te-ts)
+        return result
+
+    return timed

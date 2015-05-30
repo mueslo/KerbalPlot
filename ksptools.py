@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 import re
 import json
-from tools import OrderedDefaultDict
+from tools import OrderedDefaultDict, timeit
 
 import numpy as np
 import bisect
@@ -102,7 +102,8 @@ def pc_func_from_params(parameters):
 
 Engine = namedtuple('Engine', ['name', 'mass', 'fvac', 'isp', 'isp_func'])
 
-def get_engines(ksp_dir = "."):
+@timeit
+def get_engines(ksp_dir = ".", liquid_only=True):
     """ Returns list of type Engine """
     engine_cfgs = []
     for root, dirs, files in os.walk(ksp_dir+'/GameData/Squad/Parts/Engine'):
@@ -117,11 +118,14 @@ def get_engines(ksp_dir = "."):
         d = {}
         name = part["title"][-1]
 
+        if liquid_only and not (re.search('Liquid (Fuel )?Engine', name) or 'Atomic' in name):
+            continue
+            
         repls = (('Liquid Fuel Engine', 'LFE'),
                  ('Liquid Engine', 'LE'),
                  ('Atomic Rocket Motor', 'ARM'),
                  ('Solid Fuel Booster', 'SFB'),
-                 ('Electric Propulsion System', 'EPS')
+                 ('Electric Propulsion System', 'EPS'))
         name = reduce(lambda a, kv: a.replace(*kv), repls, name)
         name = name.strip()
 
@@ -182,21 +186,21 @@ def get_optimal_engine_configuration(engines, dv, mp, pressure=0., min_twr=0., m
 
     #configuration space: fuel tank type&count, engine type&count
 
-
+from multiprocessing import Pool
+@timeit
 def compute(engines, (Dv, M_p), **kwargs):
-    pressure = kwargs['pressure']
-    min_twr = kwargs['min_twr']
-    max_engine_count = kwargs['max_engine_count']
+    pressure = kwargs.get('pressure') or 0.0
+    min_twr = kwargs.get('min_twr') or 0.0
+    max_engine_count = kwargs.get('max_engine_count') or np.inf
     #print "Computing..."
     #TODO iterate explicitly so that n is not calculated twice
-    #TODO multiprocessing?
 
-    # number of engines needed
-    n = np.array([n_e(e, (Dv, M_p), min_twr=min_twr, pressure=pressure, max_engine_count=max_engine_count) for e in engines])
-    
+    #p = Pool(4), can't pickle function, this makes me sad. why does multiprocessing not use the 'dill' module?
+    # number of engines needed     
+    N = np.array([n_e(e, (Dv, M_p), min_twr=min_twr, pressure=pressure, max_engine_count=max_engine_count) for e in engines])
+ 
     # total mass
-    M = [(n[i]*e.mass+M_p)*np.exp(Dv/(g0*e.isp_func(pressure))) for i,e in enumerate(engines)]
-    #M = np.array([(n_e(e,M_p,Dv,min_twr=min_twr, pressure=pressure, max_engine_count=max_engine_count)*e.mass+M_p)*np.exp(Dv/(g0*e.isp_func(pressure))) for e in engines])
+    M = np.array([(N[i]*e.mass+M_p) * np.exp(Dv / (g0*e.isp_func(pressure)) ) for i,e in enumerate(engines)])
 
     # index of engine with configuration of least mass
     I = np.argmin(M,axis=0)     
@@ -205,4 +209,4 @@ def compute(engines, (Dv, M_p), **kwargs):
     I[b] = len(engines) #set the index to len(engines) (out of bounds)
 
     #print "Done."
-    return n, M, I
+    return N, M, I
